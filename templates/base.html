@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    {% include 'partial/head.html' %}
+    <title>
+      {% block title %}
+      {% endblock %}
+    </title>
+  </head>
+  <body>
+    <div class="container py-3">
+      {% block navbar %}
+        {% include 'partial/navbar.html' %}
+      {% endblock navbar %}
+      {% block content %}
+  
+      {% endblock %}
+    </div>
+  </body>
+  <hr>
+  <footer  class="container-fluid">
+    {% include 'partial/footer.html' %}
+    {% block script %}
+
+    {% endblock %}
+  </footer>
+</html>
