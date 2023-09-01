@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}
+  Payment
+{% endblock %}
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
+  <style>
+    * {
+      font-size: 14px;
+    }
+  </style>
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">Pricing example</a>
+  </nav>
+  {% comment %}card pix{% endcomment %}
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col d-flex align-items-center justify-content-center">
+        <div class="card w-50 text-center mx-auto">
+          <div class="card-body">
+            <h5 class="card-title">Pague R$ 100,00 via Pix</h5>
+            <hr />
+
+            <p>Para pagar, escolha uma destas opções:</p>
+            <div class="col">
+              <p>Código QR</p>
+              <div class="qr-image">
+                <img width="150px" height="200px" src="#" />
+              </div>
+            </div>
+            <p>Código de pagamento</p>
+            <div class="d-flex justify-content-center">
+              <div class="row g-3">
+                <div class="col-auto">
+                  <input class="form-control col-form-label" type="text" id="texto" value="#" />
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-outline-primary" onclick="copiarTexto()">Copiar Codigo</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-muted">Vencimento: 2023-09-02T13:56:12.063-04:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function copiarTexto() {
+      var textoCopiado = document.getElementById('texto')
+      textoCopiado.select()
+      document.execCommand('Copy')
+      alert('Texto copiado: ' + textoCopiado.value)
+    }
+  </script>
+
+  {% comment %}card boleto{% endcomment %}
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col d-flex align-items-center justify-content-center">
+        <div class="card w-50 text-center mx-auto">
+          <div class="card-body">
+            <h5 class="card-title">Pague R$ 100,00 via Pix</h5>
+            <hr />
+            <p>Para pagar, escolha uma destas opções:</p>
+            <p>Código QR</p>
+            <div class="col">
+              <div class="qr-image">
+                <svg id="barcode"></svg>
+              </div>
+            </div>
+            <p>Código de pagamento</p>
+
+            <div class="d-flex justify-content-center">
+              <div class="row g-3">
+                <div class="col-auto">
+                  <input class="form-control col-form-label" type="text" id="texto2" value="00000000000000000000000000000000000000000000000" />
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-outline-primary" onclick="copiarTexto2()">Copiar Codigo</button>
+                    <a class="btn btn-outline-secondary" href="#" target="_blank">Salvar PDF</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-muted">Vencimento: 2023-09-04T22:59:59.000-04:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js"></script>
+  <script>
+    function copiarTexto2() {
+      var textoCopiado = document.getElementById('texto2')
+      textoCopiado.select()
+      document.execCommand('Copy')
+      alert('Texto copiado: ' + textoCopiado.value)
+    }
+    var codigoBarras = '#'
+    
+    // Gerar o código de barras e inseri-lo no elemento SVG
+    JsBarcode('#barcode', codigoBarras, {
+      format: 'CODE128', // Especifica o formato do código de barras
+      displayValue: false, // Exibe o valor abaixo do código de barras
+      width: 1.5,
+      height: 60
+    })
+  </script>
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

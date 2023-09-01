@@ -52,18 +52,16 @@ def paymentsConfirm(request):
     else:
         # Handle the case where the data is not found in the session
         checkout_data = {}
+        return redirect('paymentsCheckout')
 
     # Pass the data to the template context
     context = {'checkout_data': checkout_data}
 
-    return render(request, 'payments/pages/payments.html', context)
+    return render(request, 'payments/pages/paymentsConfirm.html', context)
 
-    # # Retrieve the JSON data from the session
-    # checkout_data_json = request.session.get('checkout_data', '{}')
-    # checkout_data = json.loads(checkout_data_json)
-    # methodspayments = checkout_data['methodpayment']
 
-    # return JsonResponse(checkout_data, safe=False)
+def payment(request):
+    return render(request, 'payments/pages/payment.html')
 
 
 def methodsPayments(request):
