@@ -1,8 +1,9 @@
+import json
 import os
 
 import mercadopago
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 
 sdk = mercadopago.SDK(os.environ.get('ACCESS_TOKEN'))
 
@@ -15,7 +16,54 @@ def home(request):
 
 
 def checkout(request):
+    response = {}
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        cpf = request.POST.get('cpf')
+        methodpayment = request.POST.get('paymentMethod')
+        amount = 100
+
+        response = {
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'cpf': cpf,
+            'methodpayment': methodpayment,
+            'amount': amount
+        }
+        # Store the response data in the session
+        request.session['checkout_data'] = json.dumps(response)
+
+        # Redirect to the 'payments' view
+        return redirect('paymentsConfirm')
     return render(request, 'payments/pages/checkout.html')
+
+
+def paymentsConfirm(request):
+
+    # Retrieve the JSON data from the session
+    checkout_data_json = request.session.get('checkout_data', None)
+
+    if checkout_data_json:
+        # Parse the JSON data
+        checkout_data = json.loads(checkout_data_json)
+    else:
+        # Handle the case where the data is not found in the session
+        checkout_data = {}
+
+    # Pass the data to the template context
+    context = {'checkout_data': checkout_data}
+
+    return render(request, 'payments/pages/payments.html', context)
+
+    # # Retrieve the JSON data from the session
+    # checkout_data_json = request.session.get('checkout_data', '{}')
+    # checkout_data = json.loads(checkout_data_json)
+    # methodspayments = checkout_data['methodpayment']
+
+    # return JsonResponse(checkout_data, safe=False)
 
 
 def methodsPayments(request):

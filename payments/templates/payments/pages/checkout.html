@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block title %}Checkout{% endblock title %}
-{% block navbar %}{% endblock navbar %}
 {% block content %}
 <div class="py-5 text-center">
     <img class="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72"
@@ -36,35 +35,24 @@
     </div>
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Billing address</h4>
-        <form>
+        <form action="{% url 'checkout' %}" method="POST" >
+            {% csrf_token %}
             <div class="row g-3">
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Full name</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
-                    </div>
+                    <label class="form-label">Full name</label>
+                    <input type="text" class="form-control" name="name" required>
                 </div>
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
-                    </div>
+                    <label class="form-label">E-mail</label>
+                    <input type="email" class="form-control" name="email" required>
                 </div>
                 <div class="col-md-7">
                     <label class="form-label">CPF</label>
-                    <input type="text" class="form-control" id="zip" placeholder="" required="">
-                    <div class="invalid-feedback">
-                        Zip code required.
-                    </div>
+                    <input type="text" class="form-control" name="cpf" required>
                 </div>
                 <div class="col-md-5">
-                    <label class="form-label">Telefone</label>
-                    <input type="number" class="form-control" placeholder="" required="">
-                    <div class="invalid-feedback">
-                        Zip code required.
-                    </div>
+                    <label class="form-label">Phone</label>
+                    <input type="number" class="form-control" name="phone" required>
                 </div>
             </div>
             <hr class="my-4">
@@ -73,16 +61,17 @@
 
             <div class="my-3">
                 <div class="form-check">
-                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
+                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input" value="pix" required>
                     <label class="form-check-label" for="debit">Pix</label>
                 </div>
+        
                 <div class="form-check">
-                    <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
+                    <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" value="boleto" required>
                     <label class="form-check-label" for="paypal">Boleto</label>
                 </div>
             </div>
             <hr class="my-4">
-            <a href="payment.html" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
+            <button type="submit" class="w-100 btn btn-primary btn-lg">Continue to checkout</button>
         </form>
     </div>
 </div>

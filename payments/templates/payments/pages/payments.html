@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Payment{% endblock title %}
+{% block navbar %}{% endblock navbar %}
+{% block content %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1>Payment Details</h1>
+        <p>Name: {{ checkout_data.name }}</p>
+        <p>Email: {{ checkout_data.email }}</p>
+        <p>Phone: {{ checkout_data.phone }}</p>
+        <p>CPF: {{ checkout_data.cpf }}</p>
+        <p>Payment Method: {{ checkout_data.methodpayment }}</p>
+        <p>Amount: {{ checkout_data.amount }}</p>
+
+        <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-outline-success" name="button">Confirm</button>
+    </form>
+
+{% endblock content %}
+{% block footer %}{% endblock footer %}
