@@ -1,8 +1,9 @@
 import json
 import os
+from datetime import datetime
 
 import mercadopago
-from django.http import JsonResponse
+from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render
 
 sdk = mercadopago.SDK(os.environ.get('ACCESS_TOKEN'))
@@ -18,7 +19,8 @@ def home(request):
 def checkout(request):
     response = {}
     if request.method == 'POST':
-        name = request.POST.get('name')
+        fistname = request.POST.get('fistname')
+        lastname = request.POST.get('lastname')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         cpf = request.POST.get('cpf')
@@ -26,7 +28,8 @@ def checkout(request):
         amount = 100
 
         response = {
-            'name': name,
+            'fistname': fistname,
+            'lastname': lastname,
             'email': email,
             'phone': phone,
             'cpf': cpf,
@@ -42,17 +45,14 @@ def checkout(request):
 
 
 def paymentsConfirm(request):
-
     # Retrieve the JSON data from the session
     checkout_data_json = request.session.get('checkout_data', None)
+    if not checkout_data_json:
+        return HttpResponseNotFound()
 
     if checkout_data_json:
         # Parse the JSON data
         checkout_data = json.loads(checkout_data_json)
-    else:
-        # Handle the case where the data is not found in the session
-        checkout_data = {}
-        return redirect('paymentsCheckout')
 
     # Pass the data to the template context
     context = {'checkout_data': checkout_data}
@@ -61,69 +61,52 @@ def paymentsConfirm(request):
 
 
 def payment(request):
-    return render(request, 'payments/pages/payment.html')
+    if request.method == 'GET':
+        return HttpResponseNotFound()
 
+    if request.method == 'POST':
+        checkout_data_json = request.session.get('checkout_data', None)
+        checkout_data = json.loads(checkout_data_json)
 
-def methodsPayments(request):
-    payment_methods_response = sdk.payment_methods().list_all()
-    payment_methods = payment_methods_response["response"]
-    return JsonResponse(payment_methods, safe=False)
+        fistname = checkout_data['fistname']
+        lastname = checkout_data['lastname']
+        email = checkout_data['email']
+        cpf = checkout_data['cpf']
+        methodpayment = checkout_data['methodpayment']
+        amount = checkout_data['amount']
 
+        if methodpayment == 'boleto':
+            methodpayment = 'bolbradesco'
 
-def methodTicket(request):
-    payment_data = {
-        "transaction_amount": 100,
-        "description": "Título do produto",
-        # pec = Boleto Loterica, bolbradesco = Boleto Bradesco
-        "payment_method_id": "bolbradesco",
-        "payer": {
-            "email": "UserTest@gmail.com",
-            "first_name": "Test",
-            "last_name": "User",
-            "identification": {
-                "type": "CPF",
-                "number": "191191191-00"
-            },
-            "address": {
-                "zip_code": "06233-200",
-                "street_name": "Av. das Nações Unidas",
-                "street_number": "3003",
-                "neighborhood": "Bonfim",
-                "city": "Osasco",
-                "federal_unit": "SP"
+        payment_data = {
+            "transaction_amount": amount,
+            "description": "Título do produto",
+            "payment_method_id": methodpayment,
+            "payer": {
+                "email": email,
+                "first_name": fistname,
+                "last_name": lastname,
+                "identification": {
+                    "type": "CPF",
+                    "number": cpf
+                }
             }
         }
-    }
 
-    payment_response = sdk.payment().create(payment_data)
-    payment = payment_response["response"]
-    return JsonResponse(payment, safe=False)
+        payment_response = sdk.payment().create(payment_data)
 
+        # Mercado Pago response
+        payment = payment_response["response"]
 
-def methodPix(request):
-    payment_data = {
-        "transaction_amount": 100,
-        "description": "Título do produto",
-        "payment_method_id": "pix",
-        "payer": {
-            "email": "UserTest@gmail.com",
-            "first_name": "Test",
-            "last_name": "User",
-            "identification": {
-                "type": "CPF",
-                "number": "191191191-00"
-            },
-            "address": {
-                "zip_code": "06233-200",
-                "street_name": "Av. das Nações Unidas",
-                "street_number": "3003",
-                "neighborhood": "Bonfim",
-                "city": "Osasco",
-                "federal_unit": "SP"
-            }
+        checkout_data = request.session.clear()
+
+        # converting date
+        data_expire = payment['date_of_expiration']
+        data_format = datetime.fromisoformat(data_expire)
+        data_format = data_format.strftime('%d/%m/%Y %H:%M:%S')
+
+        context = {
+            'payment': payment,
+            'data_expire': data_format,
         }
-    }
-
-    payment_response = sdk.payment().create(payment_data)
-    payment = payment_response["response"]
-    return JsonResponse(payment, safe=False)
+        return render(request, 'payments/pages/payment.html', context)
