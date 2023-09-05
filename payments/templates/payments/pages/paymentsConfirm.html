@@ -3,10 +3,11 @@
 {% block navbar %}{% endblock navbar %}
 {% block content %}
 
-    <form action="" method="post">
+    <form action="{% url 'payment' %}" method="post">
         {% csrf_token %}
         <h1>Payment Details</h1>
-        <p>Name: {{ checkout_data.name }}</p>
+        <p>First name: {{ checkout_data.fistname }}</p>
+        <p>Last name: {{ checkout_data.lastname }}</p>
         <p>Email: {{ checkout_data.email }}</p>
         <p>Phone: {{ checkout_data.phone }}</p>
         <p>CPF: {{ checkout_data.cpf }}</p>

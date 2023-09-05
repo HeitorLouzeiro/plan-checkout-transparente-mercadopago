@@ -38,9 +38,13 @@
         <form action="{% url 'checkout' %}" method="POST" >
             {% csrf_token %}
             <div class="row g-3">
-                <div class="mb-3">
-                    <label class="form-label">Full name</label>
-                    <input type="text" class="form-control" name="name" required>
+                <div class="col-md-6">
+                    <label class="form-label">Fist Name</label>
+                    <input type="text" class="form-control" placeholder="First name" name="fistname">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" placeholder="Last name" name="lastname">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">E-mail</label>
