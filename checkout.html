@@ -10,6 +10,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
+<div class="container py-3">
+
+    <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+        <a href="index.html" class="d-flex align-items-center link-body-emphasis text-decoration-none"><span
+                class="fs-4">Pricing
+                example</span></a>
+
+        <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Features</a>
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Enterprise</a>
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Support</a>
+            <a class="py-2 link-body-emphasis text-decoration-none" href="#">Pricing</a>
+        </nav>
+    </div>
+</div>
 
 <body class="bg-body-tertiary">
     <div class="container">
@@ -50,33 +65,25 @@
                     <h4 class="mb-3">Billing address</h4>
                     <form>
                         <div class="row g-3">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Full name</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp">
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fist Name</label>
+                                <input type="text" class="form-control" placeholder="First name" name="fistname">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" placeholder="Last name" name="lastname">
                             </div>
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">E-mail</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp">
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
-                                </div>
+                                <label class="form-label">E-mail</label>
+                                <input type="email" class="form-control" name="email" required>
                             </div>
                             <div class="col-md-7">
                                 <label class="form-label">CPF</label>
-                                <input type="text" class="form-control" id="zip" placeholder="" required="">
-                                <div class="invalid-feedback">
-                                    Zip code required.
-                                </div>
+                                <input type="text" class="form-control" name="cpf" required>
                             </div>
                             <div class="col-md-5">
-                                <label class="form-label">Telefone</label>
-                                <input type="number" class="form-control" placeholder="" required="">
-                                <div class="invalid-feedback">
-                                    Zip code required.
-                                </div>
+                                <label class="form-label">Phone</label>
+                                <input type="number" class="form-control" name="phone" required>
                             </div>
                         </div>
                         <hr class="my-4">
@@ -85,16 +92,19 @@
 
                         <div class="my-3">
                             <div class="form-check">
-                                <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
+                                <input id="debit" name="paymentMethod" type="radio" class="form-check-input" value="pix"
+                                    required>
                                 <label class="form-check-label" for="debit">Pix</label>
                             </div>
+
                             <div class="form-check">
-                                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
+                                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input"
+                                    value="boleto" required>
                                 <label class="form-check-label" for="paypal">Boleto</label>
                             </div>
                         </div>
                         <hr class="my-4">
-                        <a href="payment.html" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
+                        <a href="confirmPayment.html" class="w-100 btn btn-primary btn-lg">Continue to checkout</a>
                     </form>
                 </div>
             </div>
