@@ -6,6 +6,8 @@ import mercadopago
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render
 
+from .models import Product
+
 sdk = mercadopago.SDK(os.environ.get('ACCESS_TOKEN'))
 
 
@@ -13,10 +15,20 @@ sdk = mercadopago.SDK(os.environ.get('ACCESS_TOKEN'))
 
 
 def home(request):
-    return render(request, 'payments/pages/home.html')
+    template_name = 'payments/pages/home.html'
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, template_name, context)
 
 
 def checkout(request):
+    if request.method == 'GET':
+        plan = request.GET.get('sub_plan')
+        fetch_plan = Product.objects.get(name=plan)
+
+        if not fetch_plan:
+            return HttpResponseNotFound()
+
     response = {}
     if request.method == 'POST':
         fistname = request.POST.get('fistname')
@@ -25,7 +37,12 @@ def checkout(request):
         phone = request.POST.get('phone')
         cpf = request.POST.get('cpf')
         methodpayment = request.POST.get('paymentMethod')
-        amount = 100
+        amount = request.POST.get('plan')
+        try:
+            amount = float(amount)
+            fetch_plan = Product.objects.get(price=amount)
+        except Product.DoesNotExist:
+            return HttpResponseNotFound()
 
         response = {
             'fistname': fistname,
@@ -41,7 +58,12 @@ def checkout(request):
 
         # Redirect to the 'payments' view
         return redirect('paymentsConfirm')
-    return render(request, 'payments/pages/checkout.html')
+
+    context = {
+        'plan': fetch_plan
+    }
+
+    return render(request, 'payments/pages/checkout.html', context)
 
 
 def paymentsConfirm(request):
