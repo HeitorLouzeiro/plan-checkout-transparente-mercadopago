@@ -6,7 +6,7 @@ import mercadopago
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render
 
-from .models import Product
+from .models import Payments, Product
 
 sdk = mercadopago.SDK(os.environ.get('ACCESS_TOKEN'))
 
@@ -119,6 +119,24 @@ def payment(request):
 
         # Mercado Pago response
         payment = payment_response["response"]
+
+        paymentsave = Payments(
+            first_name=payment["payer"]["first_name"],
+            last_name=payment["payer"]["last_name"],
+            email=payment["payer"]["email"],
+            idetification_type=payment["payer"]["identification"]["type"],
+            idetification_number=payment["payer"]["identification"]["number"],
+            payment_id=payment["id"],
+            description=payment["description"],
+            date_approved=payment["date_approved"],
+            date_of_expiration=payment["date_of_expiration"],
+            date_last_updated=payment["date_last_updated"],
+            payment_method_id=payment["payment_method_id"],
+            status=payment["status"],
+            amount=payment["transaction_amount"],
+            user=request.user,
+        )
+        paymentsave.save()
 
         checkout_data = request.session.clear()
 
