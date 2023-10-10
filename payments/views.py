@@ -51,7 +51,8 @@ def checkout(request):
             'phone': phone,
             'cpf': cpf,
             'methodpayment': methodpayment,
-            'amount': amount
+            'amount': amount,
+            'nameplan': fetch_plan.name,
         }
         # Store the response data in the session
         request.session['checkout_data'] = json.dumps(response)
@@ -78,7 +79,6 @@ def paymentsConfirm(request):
 
     # Pass the data to the template context
     context = {'checkout_data': checkout_data}
-
     return render(request, 'payments/pages/paymentsConfirm.html', context)
 
 
@@ -95,6 +95,7 @@ def payment(request):
         email = checkout_data['email']
         cpf = checkout_data['cpf']
         methodpayment = checkout_data['methodpayment']
+        plan = checkout_data['nameplan']
         amount = checkout_data['amount']
 
         if methodpayment == 'boleto':
@@ -102,7 +103,7 @@ def payment(request):
 
         payment_data = {
             "transaction_amount": amount,
-            "description": "Título do produto",
+            "description": plan,
             "payment_method_id": methodpayment,
             "payer": {
                 "email": email,
@@ -120,6 +121,8 @@ def payment(request):
         # Mercado Pago response
         payment = payment_response["response"]
 
+        product = Product.objects.get(name=plan)
+
         paymentsave = Payments(
             first_name=payment["payer"]["first_name"],
             last_name=payment["payer"]["last_name"],
@@ -135,6 +138,7 @@ def payment(request):
             status=payment["status"],
             amount=payment["transaction_amount"],
             user=request.user,
+            product_id=product.id,
         )
         paymentsave.save()
 
