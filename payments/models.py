@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -18,6 +19,16 @@ class Product(models.Model):
     period_duration = models.CharField(
         max_length=10, choices=PERIOD_DURATION, default='Days')
     duration = models.PositiveIntegerField(blank=True, null=True)
+
+    def duration_in_days(self):
+        if self.period_duration == 'Days':
+            return self.duration
+        elif self.period_duration == 'Months':
+            return self.duration * 30  # Assuming 30 days in a month
+        elif self.period_duration == 'Years':
+            return self.duration * 365  # Assuming 365 days in a year
+        else:
+            return None  # Handle invalid duration gracefully
 
     def __str__(self):
         return self.name
@@ -77,4 +88,7 @@ class Subscription(models.Model):
         verbose_name_plural = 'Subscriptions'
 
     def __str__(self):
-        return self.user.username + " - " + self.product.name
+        createdata = self.date_created.strftime("%d/%m/%Y")
+        dateExpire = self.date_of_expiration.strftime("%d/%m/%Y")
+        return self.user.username + " - " + self.product.name + " - " \
+            + createdata + " - " + self.status + " - " + dateExpire
