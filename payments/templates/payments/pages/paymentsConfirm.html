@@ -3,7 +3,7 @@
 {% block navbar %}{% endblock navbar %}
 {% block content %}
 
-    <form action="{% url 'payment' %}" method="post">
+    <form action="{% url 'payments:payment' %}" method="post">
         {% csrf_token %}
         <h1>Payment Details</h1>
         <p>First name: {{ checkout_data.fistname }}</p>
@@ -14,7 +14,7 @@
         <p>Payment Method: {{ checkout_data.methodpayment }}</p>
         <p>Amount: {{ checkout_data.amount }}</p>
 
-        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+        <a href="{% url 'payments:home' %}" class="btn btn-outline-secondary">Cancel</a>
         <button type="submit" class="btn btn-outline-success" name="button">Confirm</button>
     </form>
 

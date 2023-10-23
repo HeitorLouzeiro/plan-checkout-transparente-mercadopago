@@ -21,7 +21,7 @@
                         <li>{{product.duration}}/{{product.period_duration}}</li>
                         <li>{{product.description}}</li>
                     </ul>
-                    <a href="{% url 'checkout' %}?sub_plan={{product.name}}" class=" w-100 btn btn-lg btn-primary">Get started</a>
+                    <a href="{% url 'payments:checkout' %}?sub_plan={{product.name}}" class=" w-100 btn btn-lg btn-primary">Get started</a>
                 </div>
             </div>
         </div>

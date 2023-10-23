@@ -58,7 +58,7 @@ def checkout(request):
         request.session['checkout_data'] = json.dumps(response)
 
         # Redirect to the 'payments' view
-        return redirect('paymentsConfirm')
+        return redirect('payments:paymentsConfirm')
 
     context = {
         'plan': fetch_plan
