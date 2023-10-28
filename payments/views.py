@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 
 import mercadopago
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render
 
@@ -22,7 +24,11 @@ def home(request):
 
 
 def checkout(request):
+
     if request.method == 'GET':
+        if not request.user.is_authenticated:
+            messages.info(request, 'You need to login first')
+
         plan = request.GET.get('sub_plan')
         fetch_plan = Product.objects.get(name=plan)
 
@@ -31,6 +37,7 @@ def checkout(request):
 
     response = {}
     if request.method == 'POST':
+
         fistname = request.POST.get('fistname')
         lastname = request.POST.get('lastname')
         email = request.POST.get('email')
@@ -67,7 +74,9 @@ def checkout(request):
     return render(request, 'payments/pages/checkout.html', context)
 
 
+@login_required(login_url='accounts:loginUser', redirect_field_name='next')
 def paymentsConfirm(request):
+
     # Retrieve the JSON data from the session
     checkout_data_json = request.session.get('checkout_data', None)
     if not checkout_data_json:
@@ -82,6 +91,7 @@ def paymentsConfirm(request):
     return render(request, 'payments/pages/paymentsConfirm.html', context)
 
 
+@login_required(login_url='accounts:loginUser', redirect_field_name='next')
 def payment(request):
     if request.method == 'GET':
         return HttpResponseNotFound()
